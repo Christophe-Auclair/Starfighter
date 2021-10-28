@@ -8,7 +8,7 @@ class Vue():
     def __init__(self, parent):
         self.parent = parent
         self.root = Tk()
-        self.root.title("STARFIGHTER V 1.0")
+        self.root.title("Starfighter")
         self.root.iconbitmap('Images\starcraft_macos_bigsur_icon_189700.ico')
         # ****** Variables texte ******
         self.text_niveau = StringVar(value="Niveau: ")
@@ -125,12 +125,12 @@ class Vue():
         self.parent.coordvaisseau(x, y)
 
     def inputhighscores(self, points):
-        self.gameoverwindow = LabelFrame(self.cadre, text="GG WP", font=("Arial", 24), anchor=CENTER)
+        self.gameoverwindow = LabelFrame(self.cadre, text="GG WP", font=("Arial", 24))
 
         self.gameover = StringVar(value='GAME OVER\nPoints : ' + str(points))
         self.points = StringVar(value=str(points))
 
-        self.gameoverwindow.grid(column=0, row=0, padx=10, sticky=NW)
+        self.gameoverwindow.grid(column=0, row=0, padx=10)
         self.scores = Label(self.gameoverwindow, textvariable=self.gameover, font=("Arial", 18))
 
         self.nom = Label(self.gameoverwindow, text="Votre nom :", font=("Arial", 12))
@@ -211,7 +211,7 @@ class Partie():
         y = self.parent.dimY * 0.8
         self.vaisseau = Vaisseau(self, x, y)
         self.ufos = []
-        self.niveau = 0
+        self.niveau = 9
         self.points = 0
         self.ufosmorts = set()
         self.creerniveau()
