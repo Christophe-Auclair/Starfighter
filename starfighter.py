@@ -456,7 +456,7 @@ class Ufo():
                 for j in self.parent.ufos:
                     if self != j:
                         distancerestante = Helper.calcDistance(self.x, self.y, j.x, j.y)
-                        if distancerestante < 50:
+                        if distancerestante < 75:
                             j.hp -= 3
                             if j.hp <= 0:
                                 self.parent.points += 5
@@ -519,7 +519,7 @@ class Boss():
                 for j in self.parent.ufos:
                     if self != j:
                         distancerestante = Helper.calcDistance(self.x, self.y, j.x, j.y)
-                        if distancerestante < 50:
+                        if distancerestante < 75:
                             self.hp -= 3
                             print("Boss HP : " + str(self.hp))
                             if self.hp <= 0:
