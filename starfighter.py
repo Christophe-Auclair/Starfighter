@@ -23,7 +23,6 @@ class Vue():
     def back(self):
         self.highscores.grid_forget()
         self.menu.grid(column=0, row=0)
-        self.text_highscores.set("")
 
     def creercadreprincipale(self):
 
@@ -31,8 +30,11 @@ class Vue():
 
         self.menu = LabelFrame(self.cadre, text="Menu", width=600, height=750, font=("Arial", 24))
 
-        self.btnjouer = Button(self.menu, text="Démarrer Partie", font=("Arial", 16), command=self.demarrerpartie)
-        self.btnscores = Button(self.menu, text="Afficher High Scores", font=("Arial", 16), command=self.showhighscores)
+        self.btnjouer = Button(self.menu, text="Démarrer Partie", font=("Arial", 16))
+        self.btnjouer.bind("<Button-1>", self.demarrerpartie)
+
+        self.btnscores = Button(self.menu, text="Afficher High Scores", font=("Arial", 16))
+        self.btnscores.bind("<Button-1>", self.showhighscoresbutton)
 
         self.menu.grid(column=0, row=0)
         self.btnjouer.grid(column=0, row=0, padx=50, pady=50)
@@ -40,7 +42,7 @@ class Vue():
         self.cadre.pack()
 
 
-    def demarrerpartie(self):
+    def demarrerpartie(self, evt):
 
         self.menu.destroy()
         self.canevas = Canvas(self.cadre, width=600, height=750, bg="black")
@@ -125,7 +127,7 @@ class Vue():
         self.parent.coordvaisseau(x, y)
 
     def inputhighscores(self, points):
-        self.gameoverwindow = LabelFrame(self.cadre, text="GG WP", font=("Arial", 24), anchor=CENTER)
+        self.gameoverwindow = LabelFrame(self.cadre, text="GG WP", font=("Arial", 24))
 
         self.gameover = StringVar(value='GAME OVER\nPoints : ' + str(points))
         self.points = StringVar(value=str(points))
@@ -148,11 +150,45 @@ class Vue():
         info = self.points.get() + ", " + nom + "\n"
         fichier.write(info)
 
+        self.showhighscores()
         self.canevas.destroy()
         self.statwindow.destroy()
         self.gameoverwindow.destroy()
         self.cadre.destroy()
         self.creercadreprincipale()
+
+    def showhighscoresbutton(self, evt):
+        scores = []
+        with open("score.txt", "r") as fichier:
+            for line in fichier:
+                strippedline = line.strip('\n')
+                score = int(strippedline.split(", ")[0])
+                nom = strippedline.split(", ")[1]
+                newline = score, nom
+                scores.append(newline)
+
+        scores.sort(key=lambda x:x[0], reverse=True)
+
+        # scores = open("score.txt", "w")
+
+        self.menu.grid_forget()
+
+        self.highscores = LabelFrame(self.cadre, text="Highscores", width=600, height=750, font=("Arial", 24))
+
+        for i in scores:
+            self.text_highscores.set(str(i) + "\n")
+            self.label_highscores = Label(self.highscores, textvariable=self.text_highscores, font=("Arial", 18))
+
+        self.btnback = Button(self.cadre, text="Back", font=("Arial", 16), command=self.back)
+
+        self.highscores.grid(column=0, row=0)
+        if scores:
+            self.label_highscores.grid()
+        self.btnback.grid()
+
+
+        print("highscores")
+        print(scores)
 
     def showhighscores(self):
         scores = []
@@ -161,30 +197,12 @@ class Vue():
                 strippedline = line.strip('\n')
                 score = int(strippedline.split(", ")[0])
                 nom = strippedline.split(", ")[1]
-                nom1= nom.strip("\'")
-                newline = score, nom1
+                newline = score, nom
                 scores.append(newline)
 
-        scores.sort(key=lambda x:x[0], reverse=True)
-
-        self.menu.grid_forget()
-        self.highscores = LabelFrame(self.cadre, text="Highscores", width=600, height=750, font=("Arial", 24))
-        self.label_highscores = Label(self.highscores, textvariable=self.text_highscores, font=("Arial", 18))
-
-        for i in scores:
-            t = self.text_highscores.get()
-            t += str(i[0]) + "\t" + i[1] + "\n"
-            self.text_highscores.set(t)
-            if i == 10:
-                break
-
-        self.label_highscores = Label(self.highscores, textvariable=self.text_highscores, font=("Arial", 18))
-        self.btnback = Button(self.highscores, text="Back", font=("Arial", 16), command=self.back)
-
-        if scores:
-            self.label_highscores.grid()
-        self.btnback.grid()
-        self.highscores.grid(column=0, row=0)
+        scores.sort(key=lambda x: x[0], reverse=True)
+        print("Highscores")
+        print(scores)
 
 # --------------------- MODELE ----------------------- #
 
