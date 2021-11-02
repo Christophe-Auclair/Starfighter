@@ -143,14 +143,14 @@ class Vue():
 
     def savescore(self):
         nom = self.nomjoueur.get()
-        print("save", self.points.get(), nom)
         fichier = open("score.txt", "a")
         info = self.points.get() + ", " + nom + "\n"
         fichier.write(info)
 
-        self.canevas.destroy()
-        self.statwindow.destroy()
-        self.gameoverwindow.destroy()
+        self.canevas.grid_forget()
+        self.statwindow.grid_forget()
+        self.savescore.grid_forget()
+        self.gameoverwindow.grid_forget()
         self.cadre.destroy()
         self.creercadreprincipale()
 
@@ -211,7 +211,7 @@ class Partie():
         y = self.parent.dimY * 0.8
         self.vaisseau = Vaisseau(self, x, y)
         self.ufos = []
-        self.niveau = 9
+        self.niveau = 0
         self.points = 0
         self.ufosmorts = set()
         self.creerniveau()
@@ -224,8 +224,6 @@ class Partie():
             self.vaisseau.minesdisponibles += 2
         elif self.vaisseau.minesdisponibles == 9:
             self.vaisseau.minesdisponibles += 1
-        print("Niveau : " + str(self.niveau))
-        print("Mines disponibles : " + str(self.vaisseau.minesdisponibles))
         nbrufos = self.niveau * self.parent.nbrufosparniveau
         nbrpos = []
         self.vaisseau.mines = []
@@ -315,7 +313,6 @@ class Vaisseau():
                 if self.invincible == 0:
                     self.hp -= 1
                     self.invincible = 20
-                    print("HP Remaining : " + str(self.hp))
         for i in self.parent.ufos:
             for j in i.torpille:
                 distancerestante = Helper.calcDistance(self.x, self.y, j.x, j.y)
@@ -324,7 +321,6 @@ class Vaisseau():
                     if self.invincible == 0:
                         self.hp -= 1
                         self.invincible = 20
-                        print("HP Remaining : " + str(self.hp))
 
     def creerobus(self):
         self.obus.append(Obus(self, self.x, self.y))
@@ -332,7 +328,6 @@ class Vaisseau():
     def creermines(self):
         if self.minesdisponibles > 0:
             self.minesdisponibles -= 1
-            print("Mines disponibles : " + str(self.minesdisponibles))
             self.mines.append(Mines(self, self.x, self.y))
 
     def deplacerobus(self):
@@ -425,14 +420,12 @@ class Ufo():
                 self.hp -= 1
                 if self.hp <= 0:
                     self.parent.points += 5
-                    print("Points : " + str(self.parent.points))
                     self.parent.ufosmorts.add(self)
                 self.parent.vaisseau.obusmorts.add(i)
         for i in self.parent.vaisseau.mines:
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille + 3:
                 self.parent.points += 5
-                print("Points : " + str(self.parent.points))
                 self.parent.ufosmorts.add(self)
                 for j in self.parent.ufos:
                     if self != j:
@@ -441,7 +434,6 @@ class Ufo():
                             j.hp -= 3
                             if j.hp <= 0:
                                 self.parent.points += 5
-                                print("Points : " + str(self.parent.points))
                                 self.parent.ufosmorts.add(j)
                 self.parent.vaisseau.minesmorts.add(i)
 
@@ -484,17 +476,14 @@ class Boss():
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille / 2.5:
                 self.hp -= 1
-                print("Boss HP : " + str(self.hp))
                 if self.hp <= 0:
                     self.parent.points += 25
-                    print("Points : " + str(self.parent.points))
                     self.parent.ufosmorts.add(self)
                 self.parent.vaisseau.obusmorts.add(i)
         for i in self.parent.vaisseau.mines:
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille / 2 + 15:
                 self.hp -= 3
-                print("Boss HP : " + str(self.hp))
                 if self.hp <= 0:
                     self.parent.ufosmorts.add(self)
                 for j in self.parent.ufos:
@@ -502,7 +491,6 @@ class Boss():
                         distancerestante = Helper.calcDistance(self.x, self.y, j.x, j.y)
                         if distancerestante < 75:
                             self.hp -= 3
-                            print("Boss HP : " + str(self.hp))
                             if self.hp <= 0:
                                 self.parent.ufosmorts.add(self)
 
