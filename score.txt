@@ -1,4 +1,5 @@
 740, kek
+10000, getgud
 1790, Chris
 15, k
 695, chris
@@ -7,5 +8,6 @@
 2125, Chris
 200, flambi
 0, a
+0, 
 0, 
 0, 

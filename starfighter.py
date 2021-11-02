@@ -237,13 +237,13 @@ class Partie():
     def creerniveau(self):
         self.niveau += 1
 
-        randomnumber1 = random.randint(0, 1000)  # le modifier pour avoir 1/1000
-        randomnumber2 = random.randint(0, 1000)  # le modifier pour avoir 1/1000
+        # randomnumber1 = random.randint(0, 1000)  # le modifier pour avoir 1/1000
+        # randomnumber2 = random.randint(0, 1000)  # le modifier pour avoir 1/1000
+        #
+        # if randomnumber1 == randomnumber2:
 
-        if randomnumber1 == randomnumber2:
-            self.shield.append(Shield(self, random.randrange(0, self.parent.dimX), 0))  # il part en aléatoire en x
-
-        self.heal.append(Heal(self, random.randrange(0, self.parent.dimX), 0))
+        self.shield.append(Shield(self, random.randrange(0, self.parent.dimX), -30))  # il part en aléatoire en x
+        self.heal.append(Heal(self, random.randrange(0, self.parent.dimX), -30))
 
         if self.vaisseau.minesdisponibles < 9:
             self.vaisseau.minesdisponibles += 2
@@ -275,6 +275,8 @@ class Partie():
     def jouercoup(self):
         if self.vaisseau.invincible > 0:
             self.vaisseau.invincible -= 1
+        if self.vaisseau.shield > 0:
+            self.vaisseau.shield -= 1
         self.vaisseau.deplacer(self.coordvaisseauX, self.coordvaisseauY)
         self.vaisseau.deplacerobus()
         for i in self.ufos:
@@ -323,6 +325,7 @@ class Vaisseau():
         self.obusmorts = set()
         self.hp = 10
         self.invincible = 0
+        self.shield = 0
         self.minesdisponibles = 0
         self.mines = []
         self.minesmorts = set()
@@ -339,9 +342,17 @@ class Vaisseau():
         for i in self.parent.ufos:
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille:
+                if self.shield > 0:
+                    i.hp -= 1
+                    if i.hp <= 0:
+                        self.parent.points += 5
+                        self.parent.ufosmorts.add(i)
                 if self.invincible == 0:
                     self.hp -= 1
                     self.invincible = 20
+                    if i.hp <= 0:
+                        self.parent.points += 5
+                        self.parent.ufosmorts.add(i)
         for i in self.parent.ufos:
             for j in i.torpille:
                 distancerestante = Helper.calcDistance(self.x, self.y, j.x, j.y)
@@ -350,6 +361,18 @@ class Vaisseau():
                     if self.invincible == 0:
                         self.hp -= 1
                         self.invincible = 20
+        for i in self.parent.shield:
+            distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
+            if distancerestante < self.taille:
+                self.parent.shield = []
+                self.shield = 30
+                self.invincible = 30
+        for i in self.parent.heal:
+            distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
+            if distancerestante < self.taille:
+                self.parent.heal = []
+                self.hp += 1
+
 
     def creerobus(self):
         self.obus.append(Obus(self, self.x, self.y))
@@ -522,7 +545,6 @@ class Boss():
                             self.hp -= 3
                             if self.hp <= 0:
                                 self.parent.ufosmorts.add(self)
-
                 self.parent.vaisseau.minesmorts.add(i)
 
         if distancerestantemouvement <= 20:
@@ -547,14 +569,11 @@ class Shield():
 
     def deplacer(self):
         self.x, self.y = Helper.getAngledPoint(self.angle, self.vitesse, self.x, self.y)  # choisi un target random sur laxe x
-        distanceShieldVaisseau = Helper.calcDistance(self.x, self.y, self.parent.vaisseau.x, self.parent.vaisseau.y) # la cible étant le vaisseau
-
-        if distanceShieldVaisseau < 35:
-            self.parent.parent.partie.shield = []
-            # a finir
+        if self.y < -30:
+            self.parent.shield = []
 
 class Heal():
-    def __init__(self,parent,x,y):
+    def __init__(self, parent, x, y):
         self.parent = parent
         self.taille = 20
         self.vitesse = 4
@@ -572,11 +591,9 @@ class Heal():
 
     def deplacer(self):
         self.x, self.y = Helper.getAngledPoint(self.angle, self.vitesse, self.x, self.y)
-        distanceHealVaisseau = Helper.calcDistance(self.x, self.y, self.parent.vaisseau.x, self.parent.vaisseau.y)
+        if self.y < -30:
+            self.parent.heal = []
 
-        if distanceHealVaisseau < 35:
-            self.parent.parent.partie.heal = []
-            self.parent.parent.partie.vaisseau.hp += 1
 
 # ------------------- CONTROLEUR --------------------- #
 
