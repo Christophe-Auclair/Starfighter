@@ -88,8 +88,16 @@ class Vue():
         mineimg = PhotoImage(file='Images\\mine.png', width=30, height=30)
         self.root.mineimg = mineimg
 
+        shieldimg = PhotoImage(file='Images\shield.png', width=50, height=50)
+        self.root.shieldimg = shieldimg
+
+        healimg = PhotoImage(file='Images\heal.png', width=70, height=70)
+        self.root.healimg = healimg
+
         ufos = partie.ufos
         mines = partie.vaisseau.mines
+        shield = partie.shield
+        heal = partie.heal
 
         for i in vais.obus:
             self.canevas.create_image(i.x, i.y, image=obusimg, anchor=CENTER)
@@ -107,6 +115,12 @@ class Vue():
 
         for i in mines:
             self.canevas.create_image(i.x, i.y, image=mineimg, anchor=CENTER)
+
+        for i in shield:
+            self.canevas.create_image(i.x, i.y, image=shieldimg, anchor=CENTER)
+
+        for i in heal:
+            self.canevas.create_image(i.x, i.y, image=healimg, anchor=CENTER)
 
     def initpartie(self):
         self.canevas.bind("<Motion>", self.coordvaisseau)
@@ -211,6 +225,8 @@ class Partie():
         y = self.parent.dimY * 0.8
         self.vaisseau = Vaisseau(self, x, y)
         self.ufos = []
+        self.shield = []
+        self.heal = []
         self.niveau = 0
         self.points = 0
         self.ufosmorts = set()
@@ -220,6 +236,15 @@ class Partie():
 
     def creerniveau(self):
         self.niveau += 1
+
+        randomnumber1 = random.randint(0, 1000)  # le modifier pour avoir 1/1000
+        randomnumber2 = random.randint(0, 1000)  # le modifier pour avoir 1/1000
+
+        if randomnumber1 == randomnumber2:
+            self.shield.append(Shield(self, random.randrange(0, self.parent.dimX), 0))  # il part en aléatoire en x
+
+        self.heal.append(Heal(self, random.randrange(0, self.parent.dimX), 0))
+
         if self.vaisseau.minesdisponibles < 9:
             self.vaisseau.minesdisponibles += 2
         elif self.vaisseau.minesdisponibles == 9:
@@ -272,6 +297,10 @@ class Partie():
             if i in self.ufos:
                 self.ufos.remove(i)
         self.ufosmorts = set()
+        for i in self.shield:
+            i.deplacer()
+        for i in self.heal:
+            i.deplacer()
         if not self.ufos:
             self.creerniveau()
         if self.vaisseau.hp <= 0:
@@ -498,6 +527,56 @@ class Boss():
 
         if distancerestantemouvement <= 20:
             self.trouvercible()
+
+class Shield():
+    def __init__(self, parent, x, y):
+        self.parent = parent
+        self.taille = 30
+        self.vitesse = 4
+        self.x = x
+        self.y = y
+        self.cibleX = 0
+        self.cibleY = 0
+        self.angle = 0
+        self.trouvercible()
+
+    def trouvercible(self):
+        self.cibleX = random.randrange(self.parent.parent.dimX)
+        self.cibleY = self.parent.parent.dimY + 10
+        self.angle = Helper.calcAngle(self.x, self.y, self.cibleX, self.cibleY)
+
+    def deplacer(self):
+        self.x, self.y = Helper.getAngledPoint(self.angle, self.vitesse, self.x, self.y)  # choisi un target random sur laxe x
+        distanceShieldVaisseau = Helper.calcDistance(self.x, self.y, self.parent.vaisseau.x, self.parent.vaisseau.y) # la cible étant le vaisseau
+
+        if distanceShieldVaisseau < 35:
+            self.parent.parent.partie.shield = []
+            # a finir
+
+class Heal():
+    def __init__(self,parent,x,y):
+        self.parent = parent
+        self.taille = 20
+        self.vitesse = 4
+        self.x = x
+        self.y = y
+        self.cibleX = 0
+        self.cibleY = 0
+        self.angle = 0
+        self.trouvercible()
+
+    def trouvercible(self):
+        self.cibleX = random.randrange(self.parent.parent.dimX)
+        self.cibleY = self.parent.parent.dimY + 10
+        self.angle = Helper.calcAngle(self.x, self.y, self.cibleX, self.cibleY)
+
+    def deplacer(self):
+        self.x, self.y = Helper.getAngledPoint(self.angle, self.vitesse, self.x, self.y)
+        distanceHealVaisseau = Helper.calcDistance(self.x, self.y, self.parent.vaisseau.x, self.parent.vaisseau.y)
+
+        if distanceHealVaisseau < 35:
+            self.parent.parent.partie.heal = []
+            self.parent.parent.partie.vaisseau.hp += 1
 
 # ------------------- CONTROLEUR --------------------- #
 
