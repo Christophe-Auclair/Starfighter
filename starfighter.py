@@ -62,13 +62,14 @@ class Vue():
     def afficherpartie(self, partie):
         self.canevas.delete(ALL)
 
+        vais = partie.vaisseau
+
         self.text_niveau.set("Niveau: " + str(self.parent.partie.niveau))
-        self.text_hp.set("HP: " + str(self.parent.partie.vaisseau.hp))
-        self.text_mines.set("Mines: " + str(self.parent.partie.vaisseau.minesdisponibles))
+        self.text_hp.set("HP: " + str(vais.hp))
+        self.text_mines.set("Mines: " + str(vais.minesdisponibles))
         self.text_score.set("Score: " + str(self.parent.partie.points))
         self.canevas.create_image(0, 0, image=self.root.bg, anchor=NW)
 
-        vais = partie.vaisseau
         vaisseauimg = PhotoImage(file='Images\\Vaisseau.png', width=vais.taille, height=vais.taille)
         self.root.vaisseauimg = vaisseauimg  # Previent le garbage collector d'effacer l'image
         self.canevas.create_image(vais.x, vais.y, image=vaisseauimg, anchor=CENTER)
@@ -93,6 +94,8 @@ class Vue():
 
         activeshieldimg = PhotoImage(file='Images\\shield_active.png', width=80, height=81)
         self.root.activeshieldimg = activeshieldimg
+        if vais.shield > 0:
+            self.canevas.create_image(vais.x, vais.y, image=activeshieldimg, anchor=CENTER)
 
         healimg = PhotoImage(file='Images\\heal.png', width=70, height=70)
         self.root.healimg = healimg
