@@ -409,7 +409,7 @@ class Vaisseau():
             if distancerestante < self.taille:
                 self.parent.triple = []
                 if self.triple == 1:
-                    self.points += 25
+                    self.parent.points += 25
                 else:
                     self.triple = 1
 
