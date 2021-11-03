@@ -9,7 +9,7 @@ class Vue():
         self.parent = parent
         self.root = Tk()
         self.root.title("Starfighter")
-        self.root.iconbitmap('Images\starcraft_macos_bigsur_icon_189700.ico')
+        self.root.iconbitmap('Images\\starcraft_macos_bigsur_icon_189700.ico')
         # ****** Variables texte ******
         self.text_niveau = StringVar(value="Niveau: ")
         self.text_hp = StringVar(value="HP: ")
