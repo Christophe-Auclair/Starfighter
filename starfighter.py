@@ -19,6 +19,7 @@ class Vue():
         bg = PhotoImage(file='Images\\Background.png', width=600, height=750)
         self.root.bg = bg  # Previent le garbage collector d'effacer l'image
         self.creercadreprincipale()
+        self.flicker = False
 
     def back(self):
         self.highscores.grid_forget()
@@ -72,7 +73,7 @@ class Vue():
 
         vaisseauimg = PhotoImage(file='Images\\Vaisseau.png', width=vais.taille, height=vais.taille)
         self.root.vaisseauimg = vaisseauimg  # Previent le garbage collector d'effacer l'image
-        self.canevas.create_image(vais.x, vais.y, image=vaisseauimg, anchor=CENTER)
+        # self.canevas.create_image(vais.x, vais.y, image=vaisseauimg, anchor=CENTER)
 
         bossimg = PhotoImage(file='Images\\Boss.png', width=150, height=150)
         self.root.bossimg = bossimg
@@ -94,8 +95,18 @@ class Vue():
 
         activeshieldimg = PhotoImage(file='Images\\shield_active.png', width=80, height=81)
         self.root.activeshieldimg = activeshieldimg
+
         if vais.shield > 0:
-            self.canevas.create_image(vais.x, vais.y, image=activeshieldimg, anchor=CENTER)
+                self.canevas.create_image(vais.x, vais.y, image=activeshieldimg, anchor=CENTER)
+                self.canevas.create_image(vais.x, vais.y, image=vaisseauimg, anchor=CENTER)
+        elif vais.invincible == 0:
+            self.canevas.create_image(vais.x, vais.y, image=vaisseauimg, anchor=CENTER)
+        else:
+            if self.flicker:
+                self.flicker = False
+            else:
+                self.canevas.create_image(vais.x, vais.y, image=vaisseauimg, anchor=CENTER)
+                self.flicker = True
 
         healimg = PhotoImage(file='Images\\heal.png', width=70, height=70)
         self.root.healimg = healimg
@@ -379,7 +390,6 @@ class Vaisseau():
                 self.parent.heal = []
                 self.hp += 1
 
-
     def creerobus(self):
         self.obus.append(Obus(self, self.x, self.y))
 
@@ -600,14 +610,13 @@ class Heal():
         if self.y < -30:
             self.parent.heal = []
 
-
 # ------------------- CONTROLEUR --------------------- #
 
 class Controlleur():
     def __init__(self):
         self.modele = Modele(self)
         self.partie = None
-        self.over = 0
+        self.over = False
         self.vue = Vue(self)
         self.vue.root.mainloop()
 
@@ -623,8 +632,8 @@ class Controlleur():
         self.modele.partie.coordvaisseau(x, y)
 
     def jouercoup(self):
-        if self.over == 0:                              # si game pas terminee alors
-            self.modele.partie.jouercoup()
+        self.modele.partie.jouercoup()
+        if not self.over:                            # si game pas terminee alors
             self.vue.afficherpartie(self.partie)
             self.vue.root.after(50, self.jouercoup)     # appel recursif a chaque 50 ms
 
@@ -635,7 +644,7 @@ class Controlleur():
         self.partie.creermines()
 
     def gameover(self, points):
-        self.over = 1
+        self.over = True
         self.vue.inputhighscores(points)
 
 if __name__ == '__main__':
