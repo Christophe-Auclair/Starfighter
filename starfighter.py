@@ -30,14 +30,11 @@ class Vue():
 
         self.cadre = Frame(self.root)
 
-        self.title = Label(self.cadre, text='Starfighter', bg='blue', font=("Arial", 32))
-
         self.menu = LabelFrame(self.cadre, text="Menu", width=600, height=750, font=("Arial", 24))
 
         self.btnjouer = Button(self.menu, text="Démarrer Partie", font=("Arial", 16), command=self.demarrerpartie)
         self.btnscores = Button(self.menu, text="Afficher High Scores", font=("Arial", 16), command=self.showhighscores)
 
-        self.title.grid(column=0, row=0)
         self.menu.grid(column=0, row=1)
         self.btnjouer.grid(column=0, row=0, padx=50, pady=50)
         self.btnscores.grid(column=0, row=1, padx=50, pady=50)
@@ -223,7 +220,7 @@ class Vue():
         if scores:
             self.label_highscores.grid()
         self.btnback.grid()
-        self.highscores.grid(column=0, row=0)
+        self.highscores.grid(column=0, row=1)
 
 # --------------------- MODELE ----------------------- #
 
