@@ -73,7 +73,6 @@ class Vue():
 
         vaisseauimg = PhotoImage(file='Images\\Vaisseau.png', width=vais.taille, height=vais.taille)
         self.root.vaisseauimg = vaisseauimg  # Previent le garbage collector d'effacer l'image
-        # self.canevas.create_image(vais.x, vais.y, image=vaisseauimg, anchor=CENTER)
 
         bossimg = PhotoImage(file='Images\\Boss.png', width=150, height=150)
         self.root.bossimg = bossimg
