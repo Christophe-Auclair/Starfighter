@@ -2,10 +2,10 @@ LISEZ-MOI.TXT
 Crées par Raphaël Lavoie, Christophe Descary Auclair et Rayane Rachid Kennaf
 Pour le Cours de Génie Logiciel 1 
 ********************************************************************************
-*
-* Bienvenue dans la notice du jeu Starfighter
-* 
-*
+*                                                                              *
+*                   Bienvenue dans la notice du jeu Starfighter                *
+*                                                                              *
+*                                                                              *
 ********************************************************************************
 I. Introduction : 
 -------------------------------------------------------------------------------
@@ -32,8 +32,9 @@ Les outils mis en disposition :
 ------------------------------- 
 - Des mines : 2 par niveaux, qui sont cumulables
 - Des obus  : En illimité
-- Un shield : Une chance sur mille d'avoir un shield, rend le vaisseau invincible pendant un certain moment
+- Un shield : Une chance sur mille d'avoir un shield, rend le vaisseau invincible pendant un certain moment et tue les ovnis proche de lui
 - Un Heal   : Un heal à chaque 5 niveau, lorsque le boss apparait
+- Des missiles : lorsque le vaisseau prend le powerup missile, il tire des séries de 3 obus temporairement
 
 
 IIII. Les options de jeu : 
@@ -47,6 +48,7 @@ IIIII. Les fonctionnalités du jeu :
 -------------------------------------------------------------------------------
 - Apparition des Obus : existante
 - Appartition des Mines : existante
+- Apparition des ovnis : existante
 - Appartition des Torpilles : existante
 - Appartition des Boss à chaque 5 niveau : existante
 - Appartition des Powerups : existante
@@ -56,4 +58,3 @@ IIIII. Les fonctionnalités du jeu :
 - Changement de points selon le joueur : existante 
 - Sauvegarde des High-Scores dans un fichier .txt : existante
 - Affichage des High-Scores par un bouton Afficher High-Scores : existante
-
