@@ -7,13 +7,5 @@
 65, pasq
 2125, Chris
 200, flambi
-545, Poulet0, a
-0, 
-0, 
-0, 
-0, 
-0, A
-0, 
-0, hhh
-0, fff
-0, fgff
+545, Poulet
+2090, Chris post Buff

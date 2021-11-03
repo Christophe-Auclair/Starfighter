@@ -201,17 +201,20 @@ class Vue():
                 newline = score, nom
                 scores.append(newline)
 
-        scores.sort(key=lambda x:x[0], reverse=True)
+        scores.sort(key=lambda x: x[0], reverse=True)
 
         self.menu.grid_forget()
         self.highscores = LabelFrame(self.cadre, text="Highscores", width=600, height=750, font=("Arial", 24))
         self.label_highscores = Label(self.highscores, textvariable=self.text_highscores, font=("Arial", 18))
 
+        counter = 0
+
         for i in scores:
             t = self.text_highscores.get()
             t += str(i[0]) + "\t" + i[1] + "\n"
             self.text_highscores.set(t)
-            if i == 10:
+            counter += 1
+            if counter == 9:
                 break
 
         self.label_highscores = Label(self.highscores, textvariable=self.text_highscores, font=("Arial", 18))
@@ -373,7 +376,7 @@ class Vaisseau():
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille:
                 if self.shield > 0:
-                    i.hp -= 1
+                    i.hp -= 0.5
                     if i.hp <= 0:
                         self.parent.points += 5
                         self.parent.ufosmorts.add(i)
