@@ -403,7 +403,7 @@ class Vaisseau():
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille:
                 self.parent.heal = []
-                self.hp += 1
+                self.hp += 2
         for i in self.parent.triple:
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille:
@@ -537,7 +537,7 @@ class Boss():
         self.parent = parent
         self.taille = 150
         self.vitesse = 8
-        self.hp = 20
+        self.hp = 30
         self.x = x
         self.y = y
         self.cibleX = 0
