@@ -88,10 +88,13 @@ class Vue():
         mineimg = PhotoImage(file='Images\\mine.png', width=30, height=30)
         self.root.mineimg = mineimg
 
-        shieldimg = PhotoImage(file='Images\shield.png', width=50, height=50)
+        shieldimg = PhotoImage(file='Images\\shield.png', width=50, height=50)
         self.root.shieldimg = shieldimg
 
-        healimg = PhotoImage(file='Images\heal.png', width=70, height=70)
+        activeshieldimg = PhotoImage(file='Images\\shield_active.png', width=80, height=81)
+        self.root.activeshieldimg = activeshieldimg
+
+        healimg = PhotoImage(file='Images\\heal.png', width=70, height=70)
         self.root.healimg = healimg
 
         ufos = partie.ufos
