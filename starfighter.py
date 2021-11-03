@@ -100,10 +100,14 @@ class Vue():
         healimg = PhotoImage(file='Images\\heal.png', width=70, height=70)
         self.root.healimg = healimg
 
+        tripleimg = PhotoImage(file='Images\\triple-missile.png', width=20, height=23)
+        self.root.tripleimg = tripleimg
+
         ufos = partie.ufos
         mines = partie.vaisseau.mines
         shield = partie.shield
         heal = partie.heal
+        triple = partie.triple
 
         for i in vais.obus:
             self.canevas.create_image(i.x, i.y, image=obusimg, anchor=CENTER)
@@ -127,6 +131,9 @@ class Vue():
 
         for i in heal:
             self.canevas.create_image(i.x, i.y, image=healimg, anchor=CENTER)
+
+        for i in triple:
+            self.canevas.create_image(i.x, i.y, image=tripleimg, anchor=CENTER)
 
     def initpartie(self):
         self.canevas.bind("<Motion>", self.coordvaisseau)
@@ -233,6 +240,7 @@ class Partie():
         self.ufos = []
         self.shield = []
         self.heal = []
+        self.triple = []
         self.niveau = 0
         self.points = 0
         self.ufosmorts = set()
@@ -250,6 +258,7 @@ class Partie():
 
         self.shield.append(Shield(self, random.randrange(0, self.parent.dimX), -30))  # il part en aléatoire en x
         self.heal.append(Heal(self, random.randrange(0, self.parent.dimX), -30))
+        self.triple.append(Triple(self, random.randrange(0, self.parent.dimX), -30))
 
         if self.vaisseau.minesdisponibles < 9:
             self.vaisseau.minesdisponibles += 2
@@ -309,6 +318,8 @@ class Partie():
             i.deplacer()
         for i in self.heal:
             i.deplacer()
+        for i in self.triple:
+            i.deplacer()
         if not self.ufos:
             self.creerniveau()
         if self.vaisseau.hp <= 0:
@@ -332,6 +343,7 @@ class Vaisseau():
         self.hp = 10
         self.invincible = 0
         self.shield = 0
+        self.triple = 0
         self.minesdisponibles = 0
         self.mines = []
         self.minesmorts = set()
@@ -355,6 +367,7 @@ class Vaisseau():
                         self.parent.ufosmorts.add(i)
                 if self.invincible == 0:
                     self.hp -= 1
+                    self.triple = 0
                     self.invincible = 20
                     if i.hp <= 0:
                         self.parent.points += 5
@@ -366,6 +379,7 @@ class Vaisseau():
                     i.torpillemorts.add(j)
                     if self.invincible == 0:
                         self.hp -= 1
+                        self.triple = 0
                         self.invincible = 20
         for i in self.parent.shield:
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
@@ -378,9 +392,18 @@ class Vaisseau():
             if distancerestante < self.taille:
                 self.parent.heal = []
                 self.hp += 1
+        for i in self.parent.triple:
+            distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
+            if distancerestante < self.taille:
+                self.parent.triple = []
+                self.triple = 1
 
 
     def creerobus(self):
+        if self.triple > 0:
+            self.obus.append(Obus(self, self.x - 20, self.y))
+            self.obus.append(Obus(self, self.x + 20, self.y))
+
         self.obus.append(Obus(self, self.x, self.y))
 
     def creermines(self):
@@ -600,6 +623,27 @@ class Heal():
         if self.y < -30:
             self.parent.heal = []
 
+class Triple():
+    def __init__(self, parent, x, y):
+        self.parent = parent
+        self.taille = 20
+        self.vitesse = 4
+        self.x = x
+        self.y = y
+        self.cibleX = 0
+        self.cibleY = 0
+        self.angle = 0
+        self.trouvercible()
+
+    def trouvercible(self):
+        self.cibleX = random.randrange(self.parent.parent.dimX)
+        self.cibleY = self.parent.parent.dimY + 10
+        self.angle = Helper.calcAngle(self.x, self.y, self.cibleX, self.cibleY)
+
+    def deplacer(self):
+        self.x, self.y = Helper.getAngledPoint(self.angle, self.vitesse, self.x, self.y)
+        if self.y < -30:
+            self.parent.triple = []
 
 # ------------------- CONTROLEUR --------------------- #
 
@@ -617,7 +661,7 @@ class Controlleur():
         self.partie = self.modele.partie
         self.vue.initpartie()
         self.vue.afficherpartie(self.modele.partie)
-        self.vue.root.after(50, self.jouercoup())       # appel apres 50 ms jouercoup()
+        self.vue.root.after(25, self.jouercoup())       # appel apres 25 ms jouercoup()
 
     def coordvaisseau(self, x, y):
         self.modele.partie.coordvaisseau(x, y)
@@ -626,7 +670,7 @@ class Controlleur():
         if self.over == 0:                              # si game pas terminee alors
             self.modele.partie.jouercoup()
             self.vue.afficherpartie(self.partie)
-            self.vue.root.after(50, self.jouercoup)     # appel recursif a chaque 50 ms
+            self.vue.root.after(25, self.jouercoup)     # appel recursif a chaque 25 ms
 
     def creerobus(self):
         self.partie.creerobus()
