@@ -261,14 +261,16 @@ class Partie():
     def creerniveau(self):
         self.niveau += 1
 
-        # randomnumber1 = random.randint(0, 1000)  # le modifier pour avoir 1/1000
-        # randomnumber2 = random.randint(0, 1000)  # le modifier pour avoir 1/1000
-        #
-        # if randomnumber1 == randomnumber2:
+        randomshield = random.randrange(5)
+        randomhp = random.randrange(5)
+        randomtriple = random.randrange(5)
 
-        self.shield.append(Shield(self, random.randrange(0, self.parent.dimX), -30))  # il part en aléatoire en x
-        self.heal.append(Heal(self, random.randrange(0, self.parent.dimX), -30))
-        self.triple.append(Triple(self, random.randrange(0, self.parent.dimX), -30))
+        if randomshield < 1:
+            self.shield.append(Shield(self, random.randrange(0, self.parent.dimX), -30))  # il part en aléatoire en x
+        if randomhp < 1:
+            self.heal.append(Heal(self, random.randrange(0, self.parent.dimX), -30))
+        if randomtriple < 1:
+            self.triple.append(Triple(self, random.randrange(0, self.parent.dimX), -30))
 
         if self.vaisseau.minesdisponibles < 9:
             self.vaisseau.minesdisponibles += 2
@@ -406,7 +408,10 @@ class Vaisseau():
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille:
                 self.parent.triple = []
-                self.triple = 1
+                if self.triple == 1:
+                    self.points += 25
+                else:
+                    self.triple = 1
 
     def creerobus(self):
         if self.triple > 0:
@@ -592,7 +597,7 @@ class Shield():
     def __init__(self, parent, x, y):
         self.parent = parent
         self.taille = 30
-        self.vitesse = 4
+        self.vitesse = 6
         self.x = x
         self.y = y
         self.cibleX = 0
@@ -614,7 +619,7 @@ class Heal():
     def __init__(self, parent, x, y):
         self.parent = parent
         self.taille = 20
-        self.vitesse = 4
+        self.vitesse = 6
         self.x = x
         self.y = y
         self.cibleX = 0
@@ -636,7 +641,7 @@ class Triple():
     def __init__(self, parent, x, y):
         self.parent = parent
         self.taille = 20
-        self.vitesse = 4
+        self.vitesse = 6
         self.x = x
         self.y = y
         self.cibleX = 0
