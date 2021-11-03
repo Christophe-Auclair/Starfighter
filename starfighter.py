@@ -167,7 +167,7 @@ class Vue():
         self.gameover = StringVar(value='GAME OVER\nPoints : ' + str(points))
         self.points = StringVar(value=str(points))
 
-        self.gameoverwindow.grid(column=0, row=0, padx=10)
+        self.gameoverwindow.grid(column=0, row=1, padx=10)
         self.scores = Label(self.gameoverwindow, textvariable=self.gameover, font=("Arial", 18))
 
         self.nom = Label(self.gameoverwindow, text="Votre nom :", font=("Arial", 12))
