@@ -34,7 +34,7 @@ Les outils mis en disposition :
 - Des obus  : En illimité
 - Un shield : Une chance sur mille d'avoir un shield, rend le vaisseau invincible pendant un certain moment et tue les ovnis proche de lui
 - Un Heal   : Un heal à chaque 5 niveau, lorsque le boss apparait
-- Des missiles : lorsque le vaisseau prend le powerup missile, il tire des séries de 3 obus temporairement
+- Des missiles : lorsque le vaisseau prend le powerup missile, il tire des séries de 3 obus tant qu'il ne se fait pas toucher par un ovnis
 
 
 IIII. Les options de jeu : 
@@ -49,6 +49,7 @@ IIIII. Les fonctionnalités du jeu :
 - Apparition des Obus : existante
 - Appartition des Mines : existante
 - Apparition des ovnis : existante
+- Appartition des missiles : existante
 - Appartition des Torpilles : existante
 - Appartition des Boss à chaque 5 niveau : existante
 - Appartition des Powerups : existante
