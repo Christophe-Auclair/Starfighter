@@ -30,12 +30,15 @@ class Vue():
 
         self.cadre = Frame(self.root)
 
+        self.title = Label(self.cadre, text='Starfighter', bg='blue', font=("Arial", 32))
+
         self.menu = LabelFrame(self.cadre, text="Menu", width=600, height=750, font=("Arial", 24))
 
         self.btnjouer = Button(self.menu, text="Démarrer Partie", font=("Arial", 16), command=self.demarrerpartie)
         self.btnscores = Button(self.menu, text="Afficher High Scores", font=("Arial", 16), command=self.showhighscores)
 
-        self.menu.grid(column=0, row=0)
+        self.title.grid(column=0, row=0)
+        self.menu.grid(column=0, row=1)
         self.btnjouer.grid(column=0, row=0, padx=50, pady=50)
         self.btnscores.grid(column=0, row=1, padx=50, pady=50)
         self.cadre.pack()
@@ -45,14 +48,14 @@ class Vue():
 
         self.menu.destroy()
         self.canevas = Canvas(self.cadre, width=600, height=750, bg="black")
-        self.canevas.grid(column=0, row=0, sticky=NW)
+        self.canevas.grid(column=0, row=1, sticky=NW)
         self.statwindow = LabelFrame(self.cadre, text="Stats", font=("Arial", 24))
         self.stat_niveau = Label(self.statwindow, textvariable=self.text_niveau, font=("Arial", 18))
         self.stat_hp = Label(self.statwindow, textvariable=self.text_hp, font=("Arial", 18))
         self.stat_mines = Label(self.statwindow, textvariable=self.text_mines, font=("Arial", 18))
         self.stat_score = Label(self.statwindow, textvariable=self.text_score, font=("Arial", 18))
 
-        self.statwindow.grid(column=1, row=0, ipadx=10)
+        self.statwindow.grid(column=1, row=1, ipadx=10)
         self.stat_niveau.grid(ipadx=10, ipady=10, sticky=W)
         self.stat_hp.grid(ipadx=10, ipady=10, sticky=W)
         self.stat_mines.grid(ipadx=10, ipady=10, sticky=W)
@@ -127,7 +130,7 @@ class Vue():
                 self.canevas.create_image(i.x, i.y, image=ufoimg, anchor=CENTER)
             elif isinstance(i, Boss):
                 self.canevas.create_image(i.x, i.y, image=bossimg, anchor=CENTER)
-                self.canevas.create_line(i.x - 50, i.y - 75, (i.x - 50) + (i.hp * 5), i.y - 75, width=10, fill="red")
+                self.canevas.create_line(i.x - 50, i.y - 75, (i.x - 50) + (i.hp * 3.34), i.y - 75, width=10, fill="red")
 
         for i in ufos:
             for j in i.torpille:
