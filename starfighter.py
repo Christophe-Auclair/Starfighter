@@ -355,7 +355,7 @@ class Vaisseau():
         self.vitesse = 10
         self.obus = []
         self.obusmorts = set()
-        self.hp = 10
+        self.hp = 2
         self.invincible = 0
         self.shield = 0
         self.triple = 0
@@ -677,8 +677,8 @@ class Controlleur():
         self.modele.demarrerpartie()
         self.partie = self.modele.partie
         self.vue.initpartie()
-        self.vue.afficherpartie(self.modele.partie)
-        self.vue.root.after(25, self.jouercoup())       # appel apres 25 ms jouercoup()
+        #self.vue.afficherpartie(self.modele.partie)
+        self.vue.root.after(25, self.jouercoup)       # appel apres 25 ms jouercoup()
 
     def coordvaisseau(self, x, y):
         self.modele.partie.coordvaisseau(x, y)
