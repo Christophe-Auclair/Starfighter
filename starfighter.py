@@ -355,7 +355,7 @@ class Vaisseau():
         self.vitesse = 10
         self.obus = []
         self.obusmorts = set()
-        self.hp = 2
+        self.hp = 10
         self.invincible = 0
         self.shield = 0
         self.triple = 0
