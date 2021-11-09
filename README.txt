@@ -1,5 +1,5 @@
 LISEZ-MOI.TXT
-Crées par Raphaël Lavoie, Christophe Descary Auclair et Rayane Rachid Kennaf
+Créé par Raphaël Lavoie, Christophe Auclair et Rayane Rachid Kennaf
 Pour le Cours de Génie Logiciel 1 
 ********************************************************************************
 *                                                                              *
@@ -24,24 +24,24 @@ But du jeu :
 ------------
 - Déplacer le vaisseau à l'aide de la souris qui se dirige selon la position du curseur
 - Détruisez tous les ovnis d'un niveau
-- Esquiver les ovnis pour pas avoir de collision
-- Combattre les boss qui apparaissent à chaque 5 niveau
+- Esquiver les ovnis et les torpilles pour pas avoir de collision
+- Combattre les boss qui apparaissent à chaque 5 niveaux
 - Ramasser des bonis en passant sur l'objet qui le représente
 
 Les outils mis en disposition :
 ------------------------------- 
-- Des mines : 2 par niveaux, qui sont cumulables
+- Des mines : 2 par niveaux, qui sont cumulables jusqu'à un maximum de 10
 - Des obus  : En illimité
-- Un shield : Une chance sur mille d'avoir un shield, rend le vaisseau invincible pendant un certain moment et tue les ovnis proche de lui
-- Un Heal   : Un heal à chaque 5 niveau, lorsque le boss apparait
-- Des missiles : lorsque le vaisseau prend le powerup missile, il tire des séries de 3 obus tant qu'il ne se fait pas toucher par un ovnis
+- Un shield : Une chance sur 5 d'avoir un shield à chaque niveau, rend le vaisseau invincible pendant un certain moment et tue les ovnis proche de lui
+- Un Heal   : Une chance sur 5 d'avoir un heal à chaque niveau, redonne 2 vies au vaisseau
+- Triple missiles : lorsque le vaisseau prend le powerup triple missiles, il tire des séries de 3 obus tant qu'il ne se fait pas toucher par un ovnis
 
 
 IIII. Les options de jeu : 
 -------------------------------------------------------------------------------
 - Menu principal : choix entre le bouton Démarrer Partie et le bouton Afficher High Scores 
 - Démarrer Partie : démarre une partie au niveau 1
-- Afficher High Scores : Affichage avec le score du joueur ainsi que son nom
+- Afficher High Scores : Affichage avec les 10 meilleurs scores des joueur ainsi que leur noms
 - Entrer Votre nom : Affichage avec le score du joueur ainsi que la question pour demander son nom
 
 IIIII. Les fonctionnalités du jeu : 
@@ -56,6 +56,5 @@ IIIII. Les fonctionnalités du jeu :
 - Changement de niveau : existante
 - La fonction de collision entre les plusieurs entitées : existante
 - La fonction de fin de partie : existante
-- Changement de points selon le joueur : existante 
 - Sauvegarde des High-Scores dans un fichier .txt : existante
 - Affichage des High-Scores par un bouton Afficher High-Scores : existante
