@@ -670,7 +670,6 @@ class Controlleur():
         self.modele.demarrerpartie()
         self.partie = self.modele.partie
         self.vue.initpartie()
-        #self.vue.afficherpartie(self.modele.partie)
         self.vue.root.after(25, self.jouercoup)       # appel apres 25 ms jouercoup()
 
     def coordvaisseau(self, x, y):
