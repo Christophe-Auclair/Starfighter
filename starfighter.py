@@ -29,9 +29,8 @@ class Vue():
     def creercadreprincipale(self):
 
         self.cadre = Frame(self.root)
-
         self.menu = LabelFrame(self.cadre, text="Menu", width=600, height=750, font=("Arial", 24))
-
+        self.createhighscoreswindow()
         self.btnjouer = Button(self.menu, text="Démarrer Partie", font=("Arial", 16), command=self.demarrerpartie)
         self.btnscores = Button(self.menu, text="Afficher High Scores", font=("Arial", 16), command=self.showhighscores)
 
@@ -40,10 +39,12 @@ class Vue():
         self.btnscores.grid(column=0, row=1, padx=50, pady=50)
         self.cadre.pack()
 
+    def affichermenu(self):
+        self.menu.grid(column=0, row=1)
 
     def demarrerpartie(self):
 
-        self.menu.destroy()
+        self.menu.grid_forget()
         self.canevas = Canvas(self.cadre, width=600, height=750, bg="black")
         self.canevas.grid(column=0, row=1, sticky=NW)
         self.statwindow = LabelFrame(self.cadre, text="Stats", font=("Arial", 24))
@@ -160,35 +161,47 @@ class Vue():
         y = evt.y
         self.parent.coordvaisseau(x, y)
 
-    def inputhighscores(self, points):
+    def createhighscoreswindow(self):
         self.gameoverwindow = LabelFrame(self.cadre, text="GG WP", font=("Arial", 24))
 
-        self.gameover = StringVar(value='GAME OVER\nPoints : ' + str(points))
-        self.points = StringVar(value=str(points))
+        self.gameover = StringVar(0)
+        self.points = StringVar(0)
 
-        self.gameoverwindow.grid(column=0, row=1, padx=10)
         self.scores = Label(self.gameoverwindow, textvariable=self.gameover, font=("Arial", 18))
-
         self.nom = Label(self.gameoverwindow, text="Votre nom :", font=("Arial", 12))
         self.nomjoueur = Entry(self.gameoverwindow)
         self.savescore = Button(self.gameoverwindow, text="Enregistrer", command=self.savescore)
+        self.cancel = Button(self.gameoverwindow, text="Annuler", command=self.cancel)
+
         self.scores.grid(column=1, row=1, padx=10, pady=10)
-        self.nom.grid(column=0, row=2, padx=10, pady=10)
-        self.nomjoueur.grid(column=1, row=2, padx=10, pady=10)
-        self.savescore.grid(column=2, row=2, padx=10, pady=10)
+        self.nom.grid(column=0, row=3, padx=10, pady=10)
+        self.nomjoueur.grid(column=1, row=3, padx=10, pady=10)
+        self.savescore.grid(column=2, row=3, padx=2, pady=10)
+        self.cancel.grid(column=3, row=3, padx=2, pady=10)
+
+    def inputhighscores(self, points):
+        self.gameoverwindow.grid(column=0, row=1, padx=10)
+        self.gameover.set(value='GAME OVER\nPoints : ' + str(points))
+        self.points.set(str(points))
+        self.canevas.grid_forget()
 
     def savescore(self):
-        nom = self.nomjoueur.get()
-        fichier = open("score.txt", "a")
-        info = self.points.get() + ", " + nom + "\n"
-        fichier.write(info)
+        if self.nomjoueur.get() != "" and self.points != 0:
+            nom = self.nomjoueur.get()
+            fichier = open("score.txt", "a")
+            info = self.points.get() + ", " + nom + "\n"
+            fichier.write(info)
 
         self.canevas.grid_forget()
-        self.statwindow.grid_forget()
-        self.savescore.grid_forget()
         self.gameoverwindow.grid_forget()
-        self.cadre.destroy()
-        self.creercadreprincipale()
+        self.affichermenu()
+        self.statwindow.grid_forget()
+
+    def cancel(self):
+        self.canevas.grid_forget()
+        self.gameoverwindow.grid_forget()
+        self.affichermenu()
+        self.statwindow.grid_forget()
 
     def showhighscores(self):
         scores = []
@@ -213,7 +226,7 @@ class Vue():
             t += str(i[0]) + "\t" + i[1] + "\n"
             self.text_highscores.set(t)
             counter += 1
-            if counter == 9:
+            if counter == 14:
                 break
 
         self.label_highscores = Label(self.highscores, textvariable=self.text_highscores, font=("Arial", 18))
@@ -498,13 +511,13 @@ class Ufo():
 
     def creertorpille(self):
         self.random = random.randrange(100)                         # randomise un numero de 0 a 100
-        if self.random < 2:                                         # si 0 ou 1 on tire une torpille
+        if self.random < 1:                                         # si 0 on tire une torpille
             self.parent.torpille.append(Torpille(self, self.x, self.y))
 
     def deplacer(self):
-        self.creertorpille()                                                             # 2% chance par appel de tirer une torpille
+        self.creertorpille()                                                             # 1% chance par appel de tirer une torpille
         self.x, self.y = Helper.getAngledPoint(self.angle, self.vitesse, self.x, self.y) # choisi un target random sur laxe x
-        distancerestante = Helper.calcDistance(self.x, self.y, self.cibleX, self.cibleY) #
+        distancerestante = Helper.calcDistance(self.x, self.y, self.cibleX, self.cibleY)
         if distancerestante < self.vitesse:
             self.parent.ufosmorts.add(self)
         for i in self.parent.vaisseau.obus:
