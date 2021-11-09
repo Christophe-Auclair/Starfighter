@@ -129,9 +129,8 @@ class Vue():
                 self.canevas.create_image(i.x, i.y, image=bossimg, anchor=CENTER)
                 self.canevas.create_line(i.x - 50, i.y - 75, (i.x - 50) + (i.hp * 3.34), i.y - 75, width=10, fill="red")
 
-        for i in ufos:
-            for j in i.torpille:
-                self.canevas.create_image(j.x, j.y, image=torpilleimg, anchor=CENTER)
+        for i in partie.torpille:
+            self.canevas.create_image(i.x, i.y, image=torpilleimg, anchor=CENTER)
 
         for i in mines:
             self.canevas.create_image(i.x, i.y, image=mineimg, anchor=CENTER)
@@ -260,6 +259,8 @@ class Partie():
         self.creerniveau()
         self.coordvaisseauX = 0
         self.coordvaisseauY = 0
+        self.torpille = []
+        self.torpillemorts = set()
 
     def creerniveau(self):
         self.niveau += 1
@@ -309,14 +310,11 @@ class Partie():
             self.vaisseau.shield -= 1
         self.vaisseau.deplacer(self.coordvaisseauX, self.coordvaisseauY)
         self.vaisseau.deplacerobus()
-        for i in self.ufos:
-            for j in i.torpille:
-                j.deplacer()
-        for i in self.ufos:
-            for j in i.torpillemorts:
-                i.torpille.remove(j)
-        for i in self.ufos:
-            i.torpillemorts = set()
+        for i in self.torpille:
+            i.deplacer()
+        for i in self.torpillemorts:
+            self.torpille.remove(i)
+        self.torpillemorts = set()
         for i in self.ufos:
             i.deplacer()
         for i in self.vaisseau.obusmorts:
@@ -387,15 +385,14 @@ class Vaisseau():
                     if i.hp <= 0:
                         self.parent.points += 5
                         self.parent.ufosmorts.add(i)
-        for i in self.parent.ufos:
-            for j in i.torpille:
-                distancerestante = Helper.calcDistance(self.x, self.y, j.x, j.y)
-                if distancerestante < self.taille / 2:
-                    i.torpillemorts.add(j)
-                    if self.invincible == 0:
-                        self.hp -= 1
-                        self.triple = 0
-                        self.invincible = 30
+        for i in self.parent.torpille:
+            distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
+            if distancerestante < self.taille / 2:
+                self.parent.torpillemorts.add(i)
+                if self.invincible == 0:
+                    self.hp -= 1
+                    self.triple = 0
+                    self.invincible = 30
         for i in self.parent.shield:
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille:
@@ -479,7 +476,7 @@ class Torpille():
         else:
             self.y += self.vitesse
         if self.y > self.dimY:
-            self.parent.torpillemorts.add(self)
+            self.parent.parent.torpillemorts.add(self)
 
 class Ufo():
     def __init__(self, parent, x, y):
@@ -493,8 +490,6 @@ class Ufo():
         self.cibleY = 0
         self.angle = 0
         self.trouvercible()
-        self.torpille = []
-        self.torpillemorts = set()
 
     def trouvercible(self):
         self.cibleX = random.randrange(self.parent.parent.dimX)
@@ -504,7 +499,7 @@ class Ufo():
     def creertorpille(self):
         self.random = random.randrange(100)                         # randomise un numero de 0 a 100
         if self.random < 2:                                         # si 0 ou 1 on tire une torpille
-            self.torpille.append(Torpille(self, self.x, self.y))
+            self.parent.torpille.append(Torpille(self, self.x, self.y))
 
     def deplacer(self):
         self.creertorpille()                                                             # 2% chance par appel de tirer une torpille
@@ -547,8 +542,6 @@ class Boss():
         self.cibleY = 0
         self.angle = 0
         self.trouvercible()
-        self.torpille = []
-        self.torpillemorts = set()
 
     def trouvercible(self):
         self.cibleX = random.randrange(self.parent.parent.dimX)
@@ -564,7 +557,7 @@ class Boss():
         newx = random.randint(round(self.x) - round(self.taille / 2.5), round(self.x) + round(self.taille / 2.5))
 
         if self.random < 25:  # si 0 a 19 on tire une torpille
-            self.torpille.append(Torpille(self, newx, self.y))
+            self.parent.torpille.append(Torpille(self, newx, self.y))
 
     def deplacer(self):
         self.creertorpille()  # 2% chance par appel de tirer une torpille
