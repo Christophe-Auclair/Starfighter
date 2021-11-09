@@ -395,13 +395,13 @@ class Vaisseau():
                     if self.invincible == 0:
                         self.hp -= 1
                         self.triple = 0
-                        self.invincible = 20
+                        self.invincible = 30
         for i in self.parent.shield:
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille:
                 self.parent.shield = []
-                self.shield = 30
-                self.invincible = 30
+                self.shield = 50
+                self.invincible = 50
         for i in self.parent.heal:
             distancerestante = Helper.calcDistance(self.x, self.y, i.x, i.y)
             if distancerestante < self.taille:
