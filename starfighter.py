@@ -22,7 +22,9 @@ class Vue():
         self.flicker = False
 
     def back(self):
+        self.btnback.grid_forget()
         self.highscores.grid_forget()
+        self.controlswindow.grid_forget()
         self.menu.grid(column=0, row=0)
         self.text_highscores.set("")
 
@@ -30,13 +32,17 @@ class Vue():
 
         self.cadre = Frame(self.root)
         self.menu = LabelFrame(self.cadre, text="Menu", width=600, height=750, font=("Arial", 24))
+        self.highscores = LabelFrame(self.cadre, text="Highscores", width=600, height=750, font=("Arial", 24))
         self.createhighscoreswindow()
+        self.createcontrolswindow()
         self.btnjouer = Button(self.menu, text="Démarrer Partie", font=("Arial", 16), command=self.demarrerpartie)
         self.btnscores = Button(self.menu, text="Afficher High Scores", font=("Arial", 16), command=self.showhighscores)
+        self.btncontrols = Button(self.menu, text="Afficher les Contrôles", font=("Arial", 16), command=self.showcontrols)
 
         self.menu.grid(column=0, row=1)
         self.btnjouer.grid(column=0, row=0, padx=50, pady=50)
         self.btnscores.grid(column=0, row=1, padx=50, pady=50)
+        self.btncontrols.grid(column=0, row=2, padx=50, pady=50)
         self.cadre.pack()
 
     def affichermenu(self):
@@ -161,6 +167,31 @@ class Vue():
         y = evt.y
         self.parent.coordvaisseau(x, y)
 
+    def createcontrolswindow(self):
+        self.controlswindow = LabelFrame(self.cadre, text="Contrôles", font=("Arial", 24))
+
+        controlstext = "Click gauche pour tirer des obus -- illimité -- 1 dmg\n" \
+                       "Click droit pour placer une mine -- 2 par niveau -- max 10 -- 3 aoe dmg\n" \
+                       "Missile powerup -- permet de tirer 3 missiles à la fois -- perdu lorsque touché\n" \
+                       "Shield powerup -- invincible et fait 0.5 dmg par seconde aux ennemis sur vous\n" \
+                       "HP powerup -- redonne 2 vies\n" \
+                       "Le Vaisseau suit la souris\n" \
+                       "5 ufos de plus par niveau\n" \
+                       "1 Boss de plus par 5 niveaux\n" \
+                       "Faites le plus de points possible! Enjoy"
+
+
+
+
+        self.controls = Label(self.controlswindow, text=controlstext, font=("Arial", 12))
+        self.controls.grid()
+
+    def showcontrols(self):
+        self.menu.grid_forget()
+        self.controlswindow.grid()
+        self.btnback = Button(self.controlswindow, text="Back", font=("Arial", 16), command=self.back)
+        self.btnback.grid()
+
     def createhighscoreswindow(self):
         self.gameoverwindow = LabelFrame(self.cadre, text="GG WP", font=("Arial", 24))
 
@@ -192,16 +223,14 @@ class Vue():
             info = self.points.get() + ", " + nom + "\n"
             fichier.write(info)
 
-        self.canevas.grid_forget()
         self.gameoverwindow.grid_forget()
-        self.affichermenu()
         self.statwindow.grid_forget()
+        self.affichermenu()
 
     def cancel(self):
-        self.canevas.grid_forget()
         self.gameoverwindow.grid_forget()
-        self.affichermenu()
         self.statwindow.grid_forget()
+        self.affichermenu()
 
     def showhighscores(self):
         scores = []
@@ -217,7 +246,6 @@ class Vue():
 
         self.menu.grid_forget()
         self.highscores = LabelFrame(self.cadre, text="Highscores", width=600, height=750, font=("Arial", 24))
-        self.label_highscores = Label(self.highscores, textvariable=self.text_highscores, font=("Arial", 18))
 
         counter = 0
 
